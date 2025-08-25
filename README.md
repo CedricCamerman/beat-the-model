@@ -52,6 +52,6 @@ curl http://localhost:8000/health   # -> {"ok": true}
 
 ## Architecture Diagrams
 
-- [System Context (C4)](docs/uml/c4-system-context.svg)  
-- [Sequence: Play Round](docs/uml/play-round-sequence.svg)  
-- [Entity Relationship (ERD)](docs/uml/erd.svg)
+- [System Context (C4)](docs/uml/src/c4-system-context.mmd)  
+- [Sequence: Play Round](docs/uml/src/play-round-sequence.mmd)  
+- [Entity Relationship (ERD)](docs/uml/src/erd.mmd)
