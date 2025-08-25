@@ -1,0 +1,39 @@
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node/Next.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+.apps-cache/
+.next/
+dist/
+
+# Env & secrets
+.env
+*.env
+infra/env/.env.*    # <-- keep your real env files out of git
+
+# Build artifacts
+*.log
+coverage/
+.cache/
+
+# Data you don't want to version (keep a tiny sample only)
+data/seeds/**
+!data/seeds/.gitkeep
+data/prompts/**
+!data/prompts/.gitkeep
+data/attribution/**
+!data/attribution/.gitkeep

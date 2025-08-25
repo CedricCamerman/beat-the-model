@@ -1,0 +1,72 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: btm
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U app -d btm"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports:
+      - "5432:5432"
+
+  cache:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD","redis-cli","ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: ../../infra/docker/Dockerfile.api
+    env_file:
+      - ./infra/env/.env.api.dev
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/api:/app
+
+  worker:
+    build:
+      context: ./apps/worker
+      dockerfile: ../../infra/docker/Dockerfile.worker
+    env_file:
+      - ./infra/env/.env.api.dev
+    depends_on:
+      api:
+        condition: service_started
+    volumes:
+      - ./apps/worker:/app
+
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: ../../infra/docker/Dockerfile.web
+    env_file:
+      - ./infra/env/.env.web.dev
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+
+volumes:
+  dbdata:

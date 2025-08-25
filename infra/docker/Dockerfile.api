@@ -1,0 +1,13 @@
+FROM python:3.11-slim
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+
+# we are building with context = ./apps/api
+RUN pip install --no-cache-dir pip-tools
+COPY requirements.in /app/requirements.in
+RUN pip-compile requirements.in && pip install --no-cache-dir -r requirements.txt
+
+# copy the rest of the API app
+COPY . /app
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
