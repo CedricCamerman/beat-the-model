@@ -1,0 +1,20 @@
+flowchart LR
+  user((Player))
+
+  subgraph Client
+    web[Next.js Web App - TypeScript + Tailwind]
+  end
+
+  subgraph Backend
+    api[FastAPI API - REST JSON]
+    worker[Python Worker - RQ or Celery]
+    redis[(Redis Cache)]
+    pg[(Postgres DB)]
+  end
+
+  user --> web
+  web -->|REST /api/*| api
+  api --> redis
+  api --> pg
+  worker -.-> pg
+  worker -.-> redis

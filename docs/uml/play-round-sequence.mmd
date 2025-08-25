@@ -1,0 +1,33 @@
+sequenceDiagram
+  autonumber
+  participant U as User (Browser)
+  participant W as Web (Next.js)
+  participant A as API (FastAPI)
+  participant R as Redis (Cache)
+  participant P as Postgres (DB)
+
+  Note over U,W: Player clicks “Play” on <game, difficulty>
+  U->>W: Click Start
+  W->>A: POST /api/v1/round {game,difficulty}
+  A->>R: GET round:{game}:{seed}:{difficulty} (random pick or key list)
+  alt Cache hit
+    R-->>A: payload (no answers)
+  else Cache miss
+    A->>P: SELECT * FROM rounds WHERE game_id=... AND difficulty=... ORDER BY random() LIMIT 1
+    P-->>A: round(row) with payload/answer_key
+    A->>R: SET round:{game}:{seed}:{difficulty} = payload  (TTL optional)
+  end
+  A->>A: Make HMAC signature over {game,seed,diff,expires}
+  A-->>W: {payload, seed, difficulty, expires, signature, server_start_ts}
+
+  Note over U,W: Player answers
+  U->>W: Choose answer (or text input)
+  W->>A: POST /api/v1/submit {round_id, seed, signature, answer, client_time_ms}
+  A->>A: Verify HMAC & expiry
+  A->>P: SELECT answer_key, ai_meta FROM rounds WHERE id=round_id
+  A->>A: Compute correctness, time, score (server-only scoring)
+  A->>P: INSERT INTO results(...)
+  A->>P: UPSERT ratings (Elo) for user, game, overall
+  A->>R: ZADD lb:daily:{game} score user_id  (optional)
+  A-->>W: {outcome, score, correct_explanation, model_info, new_rating}
+  W-->>U: Show result + (optional) model confidence bars

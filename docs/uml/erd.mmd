@@ -1,0 +1,69 @@
+erDiagram
+  USERS ||--o{ RESULTS : plays
+  GAMES ||--o{ ROUNDS : has
+  ROUNDS ||--o{ RESULTS : produces
+  USERS ||--o{ RATINGS : holds
+  GAMES ||--o{ RATINGS : scoped
+  ROUNDS ||--o{ AI_RUNS : generated_by
+  LEADERBOARD_SNAPSHOTS
+
+  USERS {
+    uuid id PK
+    text handle
+    timestamptz created_at
+  }
+
+  GAMES {
+    text id PK
+    text display_name
+  }
+
+  ROUNDS {
+    bigint id PK
+    text game_id FK
+    text seed
+    int difficulty
+    jsonb payload
+    jsonb answer_key
+    jsonb ai_meta
+    timestamptz created_at
+  }
+
+  AI_RUNS {
+    bigint id PK
+    bigint round_id FK
+    text model
+    real temperature
+    text prompt_hash
+    jsonb output
+    timestamptz created_at
+  }
+
+  RESULTS {
+    bigint id PK
+    uuid user_id FK
+    bigint round_id FK
+    text game_id
+    text seed
+    int difficulty
+    jsonb user_answer
+    text outcome
+    int score
+    int time_ms
+    timestamptz created_at
+  }
+
+  RATINGS {
+    uuid user_id FK
+    text game_id
+    int rating
+    real rd
+    timestamptz updated_at
+  }
+
+  LEADERBOARD_SNAPSHOTS {
+    bigint id PK
+    text scope
+    jsonb payload
+    timestamptz created_at
+  }
