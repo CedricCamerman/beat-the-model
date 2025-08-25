@@ -1,14 +1,13 @@
 # Beat The Model — Human vs AI Benchmark (MVP)
 
+Short, skill-based mini-games where humans compete **head-to-head** against **precomputed** LLM outputs.  
+Focus: **low-latency**, **fair**, **cost-controlled** gameplay.
+
 ## Project Status
 
 🚧 **This project is under active development.**  
 The core scaffolding (Next.js + FastAPI + Postgres + Redis) is in place.  
 Next milestone: implement `/api/v1/round` + `/api/v1/submit` for the first game loop.
-
-
-Short, skill-based mini-games where humans compete **head-to-head** against **precomputed** LLM outputs.  
-Focus: **low-latency**, **fair**, **cost-controlled** gameplay.
 
 ## Stack
 
