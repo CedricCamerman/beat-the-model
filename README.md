@@ -1,4 +1,4 @@
-# Beat The Model — Human vs AI Benchmark (MVP)
+# Beat The Model: Human vs AI Benchmark (MVP)
 
 Short, skill-based mini-games where humans compete **head-to-head** against **precomputed** LLM outputs.  
 Focus: **low-latency**, **fair**, **cost-controlled** gameplay.
